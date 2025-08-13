@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower of Hanoi Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tower of Hanoi</h1>
+            <p class="subtitle">Stack the disks in order on the target tower</p>
+        </header>
+
+        <div class="game-info">
+            <div class="moves">Moves: <span id="moveCount">0</span></div>
+            <div class="timer">Time: <span id="timer">00:00</span></div>
+        </div>
+
+        <div class="controls">
+            <div class="game-modes">
+                <button id="classicModeBtn" class="btn btn-primary">Classic Mode</button>
+                <button id="randomModeBtn" class="btn btn-secondary">Random Mode</button>
+            </div>
+            <button id="restartBtn" class="btn btn-tertiary">Restart</button>
+        </div>
+
+        <div class="game-board">
+            <div class="tower" id="tower1" data-tower="1">
+                <div class="disks-container"></div>
+                <div class="base"></div>
+            </div>
+            <div class="tower" id="tower2" data-tower="2">
+                <div class="disks-container"></div>
+                <div class="base"></div>
+            </div>
+            <div class="tower" id="tower3" data-tower="3">
+                <div class="disks-container"></div>
+                <div class="base"></div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h3>Rules:</h3>
+            <ul>
+                <li>Only one disk can be moved at a time</li>
+                <li>A larger disk (higher number) cannot be placed on top of a smaller disk (lower number)</li>
+                <li><strong>Classic Mode:</strong> Move all disks from the left tower to the right tower in order (1 on top, 5 on bottom)</li>
+                <li><strong>Random Mode:</strong> Stack all disks on the highlighted target tower in order (1 on top, 5 on bottom)</li>
+                <li>Each disk is numbered for easy identification</li>
+            </ul>
+        </div>
+
+        <div id="winMessage" class="win-message hidden">
+            <h2>Congratulations! 🎉</h2>
+            <p>You solved the puzzle in <span id="finalMoves">0</span> moves!</p>
+            <p>Time: <span id="finalTime">00:00</span></p>
+            <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
