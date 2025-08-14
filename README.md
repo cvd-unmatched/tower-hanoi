@@ -1,63 +1,136 @@
 # Tower of Hanoi Puzzle
 
-A beautiful, interactive Tower of Hanoi puzzle game built with HTML, CSS, and JavaScript.
+A modern, interactive Tower of Hanoi puzzle game built with HTML5, CSS3, and JavaScript. Features two game modes and drag-and-drop functionality.
 
-## Features
+## 🎮 Game Modes
 
-- **Interactive Gameplay**: Click on towers to select and move disks
-- **Move Validation**: Prevents invalid moves with visual feedback
-- **Move Counter**: Tracks the number of moves made
-- **Timer**: Shows elapsed time during gameplay
-- **Restart Button**: Reset the game to the initial state
-- **Random Button**: Generate a random valid puzzle configuration
-- **Solve Button**: Watch the computer solve the puzzle automatically
-- **Win Detection**: Congratulations message when puzzle is completed
-- **Responsive Design**: Works on both desktop and mobile devices
+### Classic Mode
+- All 5 disks start on the left tower in correct order
+- Target: Move all disks to the right tower in order (1 on top, 5 on bottom)
 
-## How to Play
+### Random Mode
+- Disks are randomly distributed across all 3 towers
+- A random tower is selected as the target and highlighted
+- Target: Move all disks to the highlighted target tower in order
 
-1. **Objective**: Move all 5 disks from the left tower to the right tower
-2. **Rules**:
-   - Only one disk can be moved at a time
-   - A larger disk cannot be placed on top of a smaller disk
-   - Click on a tower to select the top disk
-   - Click on another tower to place the selected disk
+## 🚀 Quick Start with Docker
 
-## Game Controls
+### Option 1: Pull and Run (Recommended)
+```bash
+# Pull the latest image
+docker pull ghcr.io/cvd-unmatched/hanoi:latest
 
-- **Restart**: Resets the game to the initial configuration
-- **Random**: Creates a random valid puzzle configuration
-- **Solve**: Automatically solves the puzzle step by step
+# Run the container
+docker run -d --name tower-of-hanoi -p 8080:80 ghcr.io/cvd-unmatched/hanoi:latest
 
-## Getting Started
-
-1. Open `index.html` in your web browser
-2. The game will start automatically with 5 disks on the left tower
-3. Click on towers to move disks and solve the puzzle
-
-## Technical Details
-
-- **HTML5**: Semantic structure and accessibility
-- **CSS3**: Modern styling with gradients, animations, and responsive design
-- **JavaScript ES6+**: Object-oriented game logic with event handling
-- **No Dependencies**: Pure vanilla web technologies
-
-## Browser Compatibility
-
-Works in all modern browsers including:
-- Chrome
-- Firefox
-- Safari
-- Edge
-
-## File Structure
-
-```
-hanoy/
-├── index.html      # Main HTML file
-├── styles.css      # CSS styling
-├── script.js       # Game logic
-└── README.md       # This file
+# Open your browser to http://localhost:8080
 ```
 
-Enjoy playing the Tower of Hanoi puzzle!
+### Option 2: Using Docker Compose
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd hanoy
+
+# Run with docker-compose
+docker-compose up -d
+
+# Open your browser to http://localhost:8080
+```
+
+### Option 3: Using Makefile
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd hanoy
+
+# Pull and run
+make pull
+make run
+
+# Or use docker-compose
+make compose-up
+```
+
+## 🛠️ Local Development
+
+### Prerequisites
+- Docker installed on your system
+
+### Build Locally
+```bash
+# Build the Docker image
+make build
+
+# Run locally
+make run
+
+# Stop the container
+make stop
+
+# Clean up
+make clean
+```
+
+## 📦 Docker Image Details
+
+- **Base Image**: nginx:alpine
+- **Registry**: GitHub Container Registry (ghcr.io)
+- **Image**: `ghcr.io/cvd-unmatched/hanoi`
+- **Port**: 80 (internal), 8080 (external)
+- **Size**: ~20MB (alpine-based)
+
+## 🔧 Available Make Commands
+
+```bash
+make help          # Show available commands
+make build         # Build Docker image locally
+make run           # Run container locally
+make stop          # Stop running container
+make clean         # Remove local image
+make pull          # Pull latest image from registry
+make push          # Push image to registry (requires login)
+make compose-up    # Start with docker-compose
+make compose-down  # Stop with docker-compose
+make logs          # View container logs
+```
+
+## 🌐 Access the Application
+
+Once running, open your web browser and navigate to:
+- **Local**: http://localhost:8080
+- **Container**: http://localhost:80 (if accessing from within Docker network)
+
+## 🎯 Game Features
+
+- **Drag & Drop**: Intuitive disk movement
+- **Visual Feedback**: Target tower highlighting
+- **Move Counter**: Track your progress
+- **Timer**: Measure your solving time
+- **Responsive Design**: Works on desktop and mobile
+- **Accessibility**: Numbered disks for color-blind users
+
+## 📱 Browser Compatibility
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with Docker
+5. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🔗 Links
+
+- **Docker Image**: `ghcr.io/cvd-unmatched/hanoi:latest`
+- **GitHub Repository**: [Your Repo URL]
+- **Live Demo**: [If deployed somewhere]
