@@ -11,10 +11,35 @@ class TowerOfHanoi {
         this.isGameStarted = false;
         this.gameMode = null; // 'classic' or 'random'
         this.targetTower = null; // For random mode
+        this.isMobile = this.detectMobile();
+        this.touchStartTime = 0;
+        this.longPressTimer = null;
+        this.supportsHaptics = this.detectHapticSupport();
         
         this.initializeGame();
         this.setupEventListeners();
         console.log('TowerOfHanoi initialization complete');
+    }
+
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               window.innerWidth <= 768;
+    }
+
+    detectHapticSupport() {
+        return 'vibrate' in navigator || 'vibrate' in window.navigator;
+    }
+
+    triggerHapticFeedback() {
+        if (this.supportsHaptics && this.isMobile) {
+            try {
+                if (navigator.vibrate) {
+                    navigator.vibrate(50); // Short vibration
+                }
+            } catch (e) {
+                console.log('Haptic feedback not supported');
+            }
+        }
     }
 
     initializeGame() {
@@ -46,6 +71,13 @@ class TowerOfHanoi {
         // Tower click events
         document.querySelectorAll('.tower').forEach(tower => {
             tower.addEventListener('click', (e) => this.handleTowerClick(e));
+            
+            // Add touch events for mobile
+            if (this.isMobile) {
+                tower.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+                tower.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+                tower.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+            }
         });
 
         // Button events
@@ -53,11 +85,13 @@ class TowerOfHanoi {
         const randomModeBtn = document.getElementById('randomModeBtn');
         const restartBtn = document.getElementById('restartBtn');
         const playAgainBtn = document.getElementById('playAgainBtn');
+        const gotItBtn = document.getElementById('gotItBtn');
         
         console.log('Classic mode button found:', classicModeBtn);
         console.log('Random mode button found:', randomModeBtn);
         console.log('Restart button found:', restartBtn);
         console.log('Play again button found:', playAgainBtn);
+        console.log('Got it button found:', gotItBtn);
         
         if (classicModeBtn) {
             classicModeBtn.addEventListener('click', () => this.startClassicMode());
@@ -77,8 +111,91 @@ class TowerOfHanoi {
             playAgainBtn.addEventListener('click', () => this.restart());
         }
 
-        // Setup drag and drop
-        this.setupDragAndDrop();
+        if (gotItBtn) {
+            gotItBtn.addEventListener('click', () => this.hideMobileInstructions());
+        }
+
+        // Setup drag and drop (desktop)
+        if (!this.isMobile) {
+            this.setupDragAndDrop();
+        }
+
+        // Prevent zoom on double tap for mobile
+        if (this.isMobile) {
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        }
+
+        // Show mobile instructions on first visit
+        if (this.isMobile) {
+            this.showMobileInstructionsIfNeeded();
+            this.showMobileHelpButton();
+        }
+    }
+
+    showMobileHelpButton() {
+        const helpBtn = document.getElementById('mobileHelpBtn');
+        if (helpBtn) {
+            helpBtn.classList.remove('hidden');
+            helpBtn.addEventListener('click', () => this.showMobileInstructions());
+        }
+    }
+
+    showMobileGestureHint() {
+        const hintElement = document.getElementById('mobileGestureHint');
+        if (hintElement) {
+            hintElement.classList.remove('hidden');
+            // Hide after 4 seconds
+            setTimeout(() => {
+                hintElement.classList.add('hidden');
+            }, 4000);
+        }
+    }
+
+    handleTouchStart(e) {
+        e.preventDefault();
+        this.touchStartTime = Date.now();
+        const towerElement = e.currentTarget;
+        
+        // Start long press timer for visual feedback
+        this.longPressTimer = setTimeout(() => {
+            towerElement.style.transform = 'scale(0.95)';
+        }, 200);
+    }
+
+    handleTouchMove(e) {
+        e.preventDefault();
+        // Clear long press timer if user moves finger
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
+    }
+
+    handleTouchEnd(e) {
+        e.preventDefault();
+        const towerElement = e.currentTarget;
+        
+        // Clear long press timer
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
+        
+        // Reset transform
+        towerElement.style.transform = '';
+        
+        // Check if it's a tap (not a long press)
+        const touchDuration = Date.now() - this.touchStartTime;
+        if (touchDuration < 300) {
+            this.handleTowerClick({ currentTarget: towerElement, target: e.target });
+        }
     }
 
     handleTowerClick(e) {
@@ -121,7 +238,16 @@ class TowerOfHanoi {
         const diskElement = this.getDiskElement(towerIndex, this.selectedDisk);
         if (diskElement) {
             diskElement.classList.add('selected');
+            
+            // Add mobile-specific visual feedback
+            if (this.isMobile) {
+                diskElement.style.transform = 'scale(1.1)';
+                diskElement.style.boxShadow = '0 0 20px rgba(255,255,255,0.8)';
+            }
         }
+        
+        // Haptic feedback
+        this.triggerHapticFeedback();
     }
 
     placeDiskOnTower(targetTowerIndex) {
@@ -139,6 +265,9 @@ class TowerOfHanoi {
             this.moveCount++;
             this.updateDisplay();
             
+            // Haptic feedback for successful move
+            this.triggerHapticFeedback();
+            
             // Check for win
             console.log('Checking for win after move...');
             if (this.checkWin()) {
@@ -146,9 +275,21 @@ class TowerOfHanoi {
                 this.handleWin();
             }
         } else {
-            // Invalid move - shake animation
+            // Invalid move - shake animation and haptic feedback
             const targetTower = document.getElementById(`tower${targetTowerIndex + 1}`);
             targetTower.classList.add('invalid-move');
+            
+            // Haptic feedback for invalid move (longer vibration)
+            if (this.supportsHaptics && this.isMobile) {
+                try {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([100, 50, 100]); // Pattern vibration
+                    }
+                } catch (e) {
+                    console.log('Haptic feedback not supported');
+                }
+            }
+            
             setTimeout(() => {
                 targetTower.classList.remove('invalid-move');
             }, 500);
@@ -173,6 +314,12 @@ class TowerOfHanoi {
             const diskElement = this.getDiskElement(this.selectedTower, this.selectedDisk);
             if (diskElement) {
                 diskElement.classList.remove('selected');
+                
+                // Reset mobile-specific visual feedback
+                if (this.isMobile) {
+                    diskElement.style.transform = '';
+                    diskElement.style.boxShadow = '';
+                }
             }
         }
         
@@ -221,7 +368,11 @@ class TowerOfHanoi {
                     const disk = document.createElement('div');
                     disk.className = `disk disk-${diskSize}`;
                     disk.dataset.size = diskSize;
-                    disk.draggable = true;
+                    
+                    // Only make draggable on desktop
+                    if (!this.isMobile) {
+                        disk.draggable = true;
+                    }
                     
                     // Add number to disk
                     const number = document.createElement('span');
@@ -313,6 +464,14 @@ class TowerOfHanoi {
         this.isGameStarted = true;
         this.startTimer();
         this.highlightTargetTower();
+        
+        // Show gesture hint for mobile users
+        if (this.isMobile) {
+            setTimeout(() => {
+                this.showMobileGestureHint();
+            }, 1000);
+        }
+        
         console.log('Classic mode started - target tower:', this.targetTower + 1);
     }
 
@@ -323,6 +482,14 @@ class TowerOfHanoi {
         this.randomize();
         this.selectRandomTargetTower();
         this.startTimer();
+        
+        // Show gesture hint for mobile users
+        if (this.isMobile) {
+            setTimeout(() => {
+                this.showMobileGestureHint();
+            }, 1000);
+        }
+        
         console.log('Random mode started - target tower:', this.targetTower + 1);
     }
 
@@ -655,6 +822,31 @@ class TowerOfHanoi {
         const isValid = diskSize < topDisk;
         console.log(`  Move valid: ${diskSize} < ${topDisk} = ${isValid}`);
         return isValid;
+    }
+
+    showMobileInstructionsIfNeeded() {
+        const hasSeenInstructions = localStorage.getItem('hanoy-mobile-instructions');
+        if (!hasSeenInstructions) {
+            setTimeout(() => {
+                this.showMobileInstructions();
+            }, 1000); // Show after 1 second
+        }
+    }
+
+    showMobileInstructions() {
+        const instructionsElement = document.getElementById('mobileInstructions');
+        if (instructionsElement) {
+            instructionsElement.classList.remove('hidden');
+        }
+    }
+
+    hideMobileInstructions() {
+        const instructionsElement = document.getElementById('mobileInstructions');
+        if (instructionsElement) {
+            instructionsElement.classList.add('hidden');
+            // Mark as seen
+            localStorage.setItem('hanoy-mobile-instructions', 'true');
+        }
     }
 }
 

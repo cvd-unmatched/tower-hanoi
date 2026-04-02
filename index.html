@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#e8e4dc">
+    <meta name="msapplication-TileColor" content="#faf8f4">
     <title>Tower of Hanoi Puzzle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,6 +19,7 @@
         <header>
             <h1>Tower of Hanoi</h1>
             <p class="subtitle">Stack the disks in order on the target tower</p>
+            <button id="mobileHelpBtn" class="mobile-help-btn hidden">Help</button>
         </header>
 
         <div class="game-info">
@@ -52,14 +58,44 @@
                 <li><strong>Classic Mode:</strong> Move all disks from the left tower to the right tower in order (1 on top, 5 on bottom)</li>
                 <li><strong>Random Mode:</strong> Stack all disks on the highlighted target tower in order (1 on top, 5 on bottom)</li>
                 <li>Each disk is numbered for easy identification</li>
+                <li><strong>Mobile:</strong> Tap disks to select, then tap towers to place them</li>
             </ul>
         </div>
 
         <div id="winMessage" class="win-message hidden">
-            <h2>Congratulations! 🎉</h2>
+            <h2>Complete</h2>
             <p>You solved the puzzle in <span id="finalMoves">0</span> moves!</p>
             <p>Time: <span id="finalTime">00:00</span></p>
             <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+        </div>
+
+        <!-- Mobile Instructions Overlay -->
+        <div id="mobileInstructions" class="mobile-instructions hidden">
+            <div class="instructions-content">
+                <h3>How to play on mobile</h3>
+                <div class="instruction-step">
+                    <span class="step-number">1</span>
+                    <p>Tap a disk to select it</p>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">2</span>
+                    <p>Tap a tower to place the selected disk</p>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">3</span>
+                    <p>Only the top disk can be moved</p>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">4</span>
+                    <p>Larger disks cannot go on smaller ones</p>
+                </div>
+                <button id="gotItBtn" class="btn btn-primary">Got it!</button>
+            </div>
+        </div>
+
+        <!-- Mobile Gesture Hint -->
+        <div id="mobileGestureHint" class="mobile-gesture-hint hidden">
+            Tap a disk, then a tower to move
         </div>
     </div>
 
