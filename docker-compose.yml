@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   hanoi:
-    image: ghcr.io/cvd-unmatched/hanoi:latest
+    image: ghcr.io/cvd-unmatched/hanoi:1.0.0
     container_name: tower-of-hanoi
     ports:
       - "8080:80"

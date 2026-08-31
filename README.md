@@ -17,14 +17,15 @@ A modern, interactive Tower of Hanoi puzzle game built with HTML5, CSS3, and Jav
 
 ### Option 1: Pull and Run (Recommended)
 ```bash
-# Pull the latest image
-docker pull ghcr.io/cvd-unmatched/hanoi:latest
+# Pull a specific version (see releases for available tags)
+docker pull ghcr.io/cvd-unmatched/hanoi:1.0.0
 
 # Run the container
-docker run -d --name tower-of-hanoi -p 8080:80 ghcr.io/cvd-unmatched/hanoi:latest
+docker run -d --name tower-of-hanoi -p 8080:80 ghcr.io/cvd-unmatched/hanoi:1.0.0
 
 # Open your browser to http://localhost:8080
 ```
+`:latest` is also published on every push to `main`, but pinning to a version tag keeps deploys reproducible.
 
 ### Option 2: Using Docker Compose
 ```bash
@@ -80,6 +81,17 @@ make clean
 - **Port**: 80 (internal), 8080 (external)
 - **Size**: ~20MB (alpine-based)
 
+## 🏷️ Versioning
+
+Releases follow [semantic versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`), tracked in [package.json](package.json). Every version tag produces two image tags on ghcr.io, e.g. `1.0.0` and `1.0`; `latest` always points at the most recent push to `main`.
+
+To cut a new release:
+```bash
+# 1. Bump the version in package.json, then commit it
+# 2. Tag and push (builds ghcr.io/cvd-unmatched/hanoi:<version> via CI)
+make release
+```
+
 ## 🔧 Available Make Commands
 
 ```bash
@@ -93,6 +105,7 @@ make push          # Push image to registry (requires login)
 make compose-up    # Start with docker-compose
 make compose-down  # Stop with docker-compose
 make logs          # View container logs
+make release       # Tag current commit with package.json's version and push it
 ```
 
 ## 🌐 Access the Application
@@ -131,6 +144,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🔗 Links
 
-- **Docker Image**: `ghcr.io/cvd-unmatched/hanoi:latest`
+- **Docker Image**: `ghcr.io/cvd-unmatched/hanoi:1.0.0`
 - **GitHub Repository**: [Your Repo URL]
 - **Live Demo**: [If deployed somewhere]
