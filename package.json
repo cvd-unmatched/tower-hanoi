@@ -1,6 +1,6 @@
 {
   "name": "tower-of-hanoi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A mobile-friendly Tower of Hanoi puzzle game",
   "main": "index.html",
   "scripts": {

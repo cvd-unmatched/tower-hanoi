@@ -18,10 +18,10 @@ A modern, interactive Tower of Hanoi puzzle game built with HTML5, CSS3, and Jav
 ### Option 1: Pull and Run (Recommended)
 ```bash
 # Pull a specific version (see releases for available tags)
-docker pull ghcr.io/cvd-unmatched/hanoi:1.0.0
+docker pull ghcr.io/cvd-unmatched/hanoi:1.0.1
 
 # Run the container
-docker run -d --name tower-of-hanoi -p 8080:80 ghcr.io/cvd-unmatched/hanoi:1.0.0
+docker run -d --name tower-of-hanoi -p 8080:80 ghcr.io/cvd-unmatched/hanoi:1.0.1
 
 # Open your browser to http://localhost:8080
 ```
@@ -144,6 +144,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🔗 Links
 
-- **Docker Image**: `ghcr.io/cvd-unmatched/hanoi:1.0.0`
+- **Docker Image**: `ghcr.io/cvd-unmatched/hanoi:1.0.1`
 - **GitHub Repository**: [Your Repo URL]
 - **Live Demo**: [If deployed somewhere]
